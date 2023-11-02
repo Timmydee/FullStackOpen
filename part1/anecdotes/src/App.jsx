@@ -24,30 +24,30 @@ const App = () => {
   const onVote = () => {
     setVote((prev) => ({
       ...prev,
-      [selected] : (prev[selected] || 0) + 1
-    }))
-  }
+      [selected]: (prev[selected] || 0) + 1,
+    }));
+  };
 
   const mostVoted = () => {
-     let maxVote = -1
-     let mostVotedAnec = ''
+    let maxVotes = -1;
+    let mostVotedAnecdote = "";
 
-     for(const key in vote) {
-      if (vote[key] > maxVote) {
-        maxVote = vote[key]
-        mostVotedAnec = anecdotes[key]
+    for (const key in vote) {
+      if (vote[key] > maxVotes) {
+        maxVotes = vote[key];
+        mostVotedAnecdote = anecdotes[key];
       }
+    }
 
-      return mostVotedAnec
-     }
-  }
-
+    return mostVotedAnecdote;
+  };
 
   return (
     <div>
       <h3>Anecdtes of the Day</h3>
       <h5>
-        {anecdotes[selected]} has {!vote[selected]  ? '0' : vote[selected]} vote
+        {anecdotes[selected]} has {vote[selected] == 0 ? "0" : vote[selected]}{" "}
+        vote
       </h5>
       <button onClick={onSelect}>Next anecdotes</button>
       <button onClick={() => onVote()}>Vote</button>
@@ -55,10 +55,8 @@ const App = () => {
       <div>
         <h3>Anecdtes with most Vote</h3>
         {mostVoted()}
-        
       </div>
     </div>
-
   );
 };
 
