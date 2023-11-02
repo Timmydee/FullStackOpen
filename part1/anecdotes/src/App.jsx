@@ -28,18 +28,34 @@ const App = () => {
     }))
   }
 
+  const mostVoted = () => {
+     let maxVote = -1
+     let mostVotedAnec = ''
+
+     for(const key in vote) {
+      if (vote[key] > maxVote) {
+        maxVote = vote[key]
+        mostVotedAnec = anecdotes[key]
+      }
+
+      return mostVotedAnec
+     }
+  }
+
+
   return (
     <div>
-      <h6>
-        {anecdotes[selected]} has {vote[selected] === 0 ? 0 : vote[selected]} vote
-      </h6>
+      <h3>Anecdtes of the Day</h3>
+      <h5>
+        {anecdotes[selected]} has {!vote[selected]  ? '0' : vote[selected]} vote
+      </h5>
       <button onClick={onSelect}>Next anecdotes</button>
       <button onClick={() => onVote()}>Vote</button>
 
       <div>
         <h3>Anecdtes with most Vote</h3>
-
-        {}
+        {mostVoted()}
+        
       </div>
     </div>
 
