@@ -46,7 +46,7 @@ const App = () => {
     <div>
       <h3>Anecdtes of the Day</h3>
       <h5>
-        {anecdotes[selected]} has {vote[selected] == 0 ? "0" : vote[selected]}{" "}
+        {anecdotes[selected]} has {!vote[selected] ? "0" : vote[selected]}{" "}
         vote
       </h5>
       <button onClick={onSelect}>Next anecdotes</button>
