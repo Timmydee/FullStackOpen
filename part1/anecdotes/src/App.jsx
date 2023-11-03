@@ -44,7 +44,7 @@ const App = () => {
 
   return (
     <div>
-      <h3>Anecdtes of the Day</h3>
+      <h3>Anecdotes of the Day</h3>
       <h5>
         {anecdotes[selected]} has {!vote[selected] ? "0" : vote[selected]}{" "}
         vote
@@ -53,7 +53,7 @@ const App = () => {
       <button onClick={() => onVote()}>Vote</button>
 
       <div>
-        <h3>Anecdtes with most Vote</h3>
+        <h3>Anecdotes with most Vote</h3>
         {mostVoted()}
       </div>
     </div>
