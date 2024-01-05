@@ -1,11 +1,19 @@
 /* eslint-disable react/prop-types */
-import axios from 'axios'
+import axios from "axios";
+import personService from "./services/personService";
 
+import { useEffect, useState } from "react";
 
-import {useEffect, useState } from "react";
-
-const PersonForm = ({newName,handleInput,handlePhone,newPhone, persons, setPersons, setNewName, setNewPhone}) => {
-
+const PersonForm = ({
+  newName,
+  handleInput,
+  handlePhone,
+  newPhone,
+  persons,
+  setPersons,
+  setNewName,
+  setNewPhone,
+}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const setName = newName;
@@ -22,6 +30,10 @@ const PersonForm = ({newName,handleInput,handlePhone,newPhone, persons, setPerso
         nameExist = true;
         alert("ALREADY EXIST");
       }
+
+      if (persons[key].number === setNewPhone) {
+        
+      }
     }
 
     if (!nameExist) {
@@ -31,26 +43,47 @@ const PersonForm = ({newName,handleInput,handlePhone,newPhone, persons, setPerso
     setNewName("");
     setNewPhone("");
     console.log(persons);
+    axios.post("http://localhost:3001/persons", obj).then((response) => {
+      console.log(response.data);
+    });
   };
 
   return (
     <form onSubmit={handleSubmit}>
-        <div>
-          name: <input value={newName} onChange={handleInput} type="text" />
-        </div>
-        <div>
-          Phone No:{" "}
-          <input value={newPhone} onChange={handlePhone} type="text" />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-  )
-}
+      <div>
+        name: <input value={newName} onChange={handleInput} type="text" />
+      </div>
+      <div>
+        Phone No: <input value={newPhone} onChange={handlePhone} type="text" />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  );
+};
 
-const Filtered = ({newSearch, persons}) => {
-  const filteredSearch = newSearch ? persons.filter((person) => person.name.toLowerCase().includes(newSearch.toLowerCase())) : persons
+const Filtered = ({ newSearch, persons, setPersons }) => {
+  const filteredSearch = newSearch
+    ? persons.filter((person) =>
+        person.name.toLowerCase().includes(newSearch.toLowerCase())
+      )
+    : persons;
+
+  const onDelete = (id) => {
+    const confirm = window.confirm("Are you sure you want to delete");
+
+    if (confirm) {
+      axios.delete(`http://localhost:3001/persons/${id}`).then(() => {
+        setPersons(persons.filter((person) => person.id !== id));
+        console.log("deleted");
+      })
+
+      .catch((error) => {
+        console.log('Deletion Failed ', error)
+      })
+    }
+  };
 
   return (
     <div>
@@ -60,31 +93,26 @@ const Filtered = ({newSearch, persons}) => {
             <h6>
               {person.name}: {person.number}
             </h6>
+            <button onClick={() => onDelete(person.id)}>Delete</button>
           </div>
         );
       })}
     </div>
-  )
-}
+  );
+};
 
 const App = () => {
-
-  const [persons, setPersons] = useState([])
+  const [persons, setPersons] = useState([]);
 
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [newSearch, setNewSearch] = useState("");
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-    .then((response) => {
-      setPersons(response.data)
-    })
-
-  }, [])
-  
-
-  
+    personService.getAll().then((initialNote) => {
+      setPersons(initialNote);
+    });
+  }, []);
 
   const handleInput = (e) => {
     setNewName(e.target.value);
@@ -96,8 +124,6 @@ const App = () => {
   const handleSearch = (e) => {
     setNewSearch(e.target.value);
   };
-
-
 
   return (
     <div>
@@ -112,18 +138,18 @@ const App = () => {
         setPersons={setPersons}
         setNewName={setNewName}
         setNewPhone={setNewPhone}
-        newName = {newName}
-        handleInput = {handleInput}
-        newPhone = {newPhone}
-        handlePhone = {handlePhone}
-        
+        newName={newName}
+        handleInput={handleInput}
+        newPhone={newPhone}
+        handlePhone={handlePhone}
       />
-      
+
       <h2>Numbers</h2>
 
-      <Filtered 
+      <Filtered
         newSearch={newSearch}
         persons={persons}
+        setPersons={setPersons}
       />
     </div>
   );
