@@ -1,7 +1,7 @@
-POST http://localhost:3001/api/notes
-Content-Type: : application/json
+POST  http://localhost:3001/api/persons/
 
 {
-    "content": "Browser kkkkkcan execute only JavaScript",
-    "important": false
+  "name": "hfjfkf",
+  "number": "6689807892"
 }
+
